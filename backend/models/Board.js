@@ -11,6 +11,8 @@ const cellSchema = new mongoose.Schema({
   emoji: { type: String, default: "" }, // Icon/emoji
   note: { type: String, default: "" }, // Ghi chú
   checked: { type: Boolean, default: false }, // Đã hoàn thành chưa
+  bgColor: { type: String, default: "" }, // Màu nền riêng cho ô
+  bgImage: { type: String, default: "" }, // Ảnh nền riêng cho ô
 });
 
 /**
@@ -32,6 +34,14 @@ const boardSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    startDate: {
+      type: Date,
+      default: null,
+    },
+    endDate: {
+      type: Date,
+      default: null,
+    },
     size: {
       rows: { type: Number, required: true, default: 5 },
       cols: { type: Number, required: true, default: 5 },
@@ -40,6 +50,7 @@ const boardSchema = new mongoose.Schema(
     theme: {
       primary: { type: String, default: "#3b82f6" }, // màu chính
       bg: { type: String, default: "#ffffff" }, // màu nền
+      bgImage: { type: String, default: "" }, // URL ảnh nền
       textColor: { type: String, default: "#1f2937" }, // màu chữ
       fontFamily: { type: String, default: "Inter" }, // font chữ
     },

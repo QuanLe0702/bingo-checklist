@@ -110,18 +110,34 @@ export const updateBoard = async (req, res) => {
     }
 
     // Cập nhật các field
-    const { title, description, size, cells, theme, visibility } = req.body;
+    const { title, description, size, cells, theme, visibility, startDate, endDate } = req.body;
+
+    console.log('Updating board:', req.params.id);
+    console.log('startDate received:', startDate);
+    console.log('endDate received:', endDate);
+    console.log('Cells received:', cells ? cells.length : 0);
+    if (cells && cells.length > 0) {
+      console.log('First cell:', cells[0]);
+      const cellsWithBgImage = cells.filter(c => c.bgImage);
+      console.log('Cells with bgImage:', cellsWithBgImage.length);
+    }
 
     if (title) board.title = title;
     if (description !== undefined) board.description = description;
+    if (startDate !== undefined) board.startDate = startDate;
+    if (endDate !== undefined) board.endDate = endDate;
     if (size) board.size = size;
     if (cells) board.cells = cells;
     if (theme) board.theme = { ...board.theme, ...theme };
     if (visibility) board.visibility = visibility;
 
     await board.save();
+    console.log('Board saved successfully');
+    console.log('Board startDate after save:', board.startDate);
+    console.log('Board endDate after save:', board.endDate);
     res.json(board);
   } catch (error) {
+    console.error('Update board error:', error);
     res.status(500).json({ message: error.message });
   }
 };
