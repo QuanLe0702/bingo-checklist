@@ -21,6 +21,34 @@ const BoardEditor = () => {
   const [shareUrl, setShareUrl] = useState('');
 
   /**
+   * Lấy border-radius dựa vào cellShape
+   */
+  const getCellBorderRadius = (shape) => {
+    const shapes = {
+      square: '0.5rem',
+      circle: '50%',
+      heart: '50% 50% 0 0',
+      oval: '50%',
+      diamond: '0.5rem',
+      hexagon: '0.5rem',
+      rounded: '1.5rem',
+    };
+    return shapes[shape] || '0.5rem';
+  };
+
+  /**
+   * Lấy clip-path cho hình dạng đặc biệt
+   */
+  const getCellClipPath = (shape) => {
+    const shapes = {
+      heart: 'path("M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z")',
+      diamond: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+      hexagon: 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)',
+    };
+    return shapes[shape] || 'none';
+  };
+
+  /**
    * Render emoji với layout thông minh
    * 1-3 emoji: 1 hàng
    * 4 emoji: 2x2 grid
@@ -249,12 +277,14 @@ const BoardEditor = () => {
                   <div
                     key={cell.id}
                     onClick={() => handleCellClick(cell)}
-                    className="aspect-square flex flex-col items-center justify-center border-2 rounded-lg p-3 cursor-pointer hover:scale-105 transition-all relative overflow-hidden z-10"
+                    className="aspect-square flex flex-col items-center justify-center border-2 p-3 cursor-pointer hover:scale-105 transition-all relative overflow-hidden z-10"
                     style={{
                       borderColor: board.theme?.primary || '#3b82f6',
                       backgroundColor: cell.bgColor || board.theme?.bg || '#ffffff',
                       color: board.theme?.textColor || '#1f2937',
                       fontFamily: board.theme?.fontFamily || 'Inter',
+                      borderRadius: getCellBorderRadius(board.theme?.cellShape || 'square'),
+                      clipPath: getCellClipPath(board.theme?.cellShape || 'square'),
                     }}
                   >
                     {/* Cell background image */}

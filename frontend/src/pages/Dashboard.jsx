@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import useBoardStore from '../store/boardStore';
 import useAuthStore from '../store/authStore';
 import { Plus, Trash2, Edit, Play, Settings, Upload, X } from 'lucide-react';
+import axios from 'axios';
 
 /**
  * Trang Dashboard - hiển thị danh sách boards của user
@@ -11,13 +12,13 @@ import { Plus, Trash2, Edit, Play, Settings, Upload, X } from 'lucide-react';
 const Dashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { user, logout, updateUser } = useAuthStore();
   const { boards, loading, fetchBoards, deleteBoard } = useBoardStore();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
-  const [dashboardBg, setDashboardBg] = useState(
-    localStorage.getItem('dashboardBg') || ''
-  );
+  const [dashboardBg, setDashboardBg] = useState(user?.dashboardBg || '');
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
   useEffect(() => {
     if (!user) {
@@ -25,6 +26,7 @@ const Dashboard = () => {
       return;
     }
     fetchBoards();
+    setDashboardBg(user.dashboardBg || '');
   }, [user]);
 
   const handleCreateNew = () => {
@@ -65,9 +67,13 @@ const Dashboard = () => {
             >
               <Settings size={18} />
             </button>
-            <span className="text-sm text-gray-600 bg-white px-3 py-1.5 rounded-full shadow-sm">
+            <Link
+              to="/profile"
+              className="text-sm text-gray-600 bg-white px-3 py-1.5 rounded-full shadow-sm hover:shadow-md hover:bg-pink-50 transition-all cursor-pointer"
+              title="Xem thông tin cá nhân"
+            >
               👋 {user?.displayName || user?.username}
-            </span>
+            </Link>
             <button onClick={logout} className="btn btn-secondary text-sm">
               {t('logout')}
             </button>
@@ -163,10 +169,28 @@ const Dashboard = () => {
       {showSettingsDialog && (
         <DashboardSettingsDialog
           currentBg={dashboardBg}
-          onSave={(newBg) => {
-            setDashboardBg(newBg);
-            localStorage.setItem('dashboardBg', newBg);
-            setShowSettingsDialog(false);
+          onSave={async (newBg) => {
+            try {
+              const token = localStorage.getItem('token');
+              const response = await axios.put(
+                `${API_URL}/api/auth/update-dashboard-bg`,
+                { dashboardBg: newBg },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              
+              // Cập nhật user trong store
+              updateUser(response.data);
+              setDashboardBg(newBg);
+              setShowSettingsDialog(false);
+              alert('✅ Đã lưu ảnh nền Dashboard!');
+            } catch (error) {
+              console.error('Update dashboard bg error:', error);
+              alert('❌ Có lỗi khi lưu ảnh nền');
+            }
           }}
           onClose={() => setShowSettingsDialog(false)}
         />

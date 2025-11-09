@@ -21,8 +21,8 @@ const app = express();
 // Middleware
 app.use(helmet()); // Security headers
 app.use(morgan("dev")); // Logging
-app.use(express.json()); // Parse JSON
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded
+app.use(express.json({ limit: '10mb' })); // Parse JSON with 10MB limit
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Parse URL-encoded
 app.use(cookieParser()); // Parse cookies
 
 // CORS

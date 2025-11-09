@@ -82,6 +82,16 @@ const useAuthStore = create((set) => ({
       throw error;
     }
   },
+
+  /**
+   * Cập nhật thông tin user (sau khi đổi tên)
+   */
+  updateUser: (userData) => {
+    const updatedUser = { ...userData };
+    delete updatedUser.message; // Remove message field if exists
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    set({ user: updatedUser });
+  },
 }));
 
 export default useAuthStore;

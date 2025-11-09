@@ -11,6 +11,7 @@ const ThemePicker = ({ currentTheme, onThemeChange }) => {
     bgImage: '',
     textColor: '#1f2937',
     fontFamily: 'Inter',
+    cellShape: 'square', // Mặc định là vuông
   });
 
   const colorPresets = [
@@ -24,6 +25,16 @@ const ThemePicker = ({ currentTheme, onThemeChange }) => {
 
   const fonts = ['Inter', 'Arial', 'Georgia', 'Courier New', 'Comic Sans MS'];
 
+  const cellShapes = [
+    { name: 'Vuông', value: 'square', icon: '🟦' },
+    { name: 'Tròn', value: 'circle', radius: '50%', icon: '🔴' },
+    // { name: 'Trái tim', value: 'heart', radius: '50% 50% 0 0', icon: '❤️' },
+    // { name: 'Bầu dục', value: 'oval', radius: '50%/40%', icon: '🥚' },
+    // { name: 'Kim cương', value: 'diamond', radius: '0.5rem', icon: '💎' },
+    // { name: 'Lục giác', value: 'hexagon', radius: '1rem', icon: '⬡' },
+    // { name: 'Bo tròn', value: 'rounded', radius: '1.5rem', icon: '▢' },
+  ];
+
   const handleColorPreset = (preset) => {
     const newTheme = {
       ...theme,
@@ -36,6 +47,12 @@ const ThemePicker = ({ currentTheme, onThemeChange }) => {
 
   const handleFontChange = (font) => {
     const newTheme = { ...theme, fontFamily: font };
+    setTheme(newTheme);
+    onThemeChange(newTheme);
+  };
+
+  const handleShapeChange = (shape) => {
+    const newTheme = { ...theme, cellShape: shape };
     setTheme(newTheme);
     onThemeChange(newTheme);
   };
@@ -186,6 +203,27 @@ const ThemePicker = ({ currentTheme, onThemeChange }) => {
             </option>
           ))}
         </select>
+      </div>
+
+      <div>
+        <h3 className="text-sm font-semibold mb-3 text-gray-700">🔷 Hình dạng ô</h3>
+        <div className="grid grid-cols-4 gap-2">
+          {cellShapes.map((shape) => (
+            <button
+              key={shape.value}
+              onClick={() => handleShapeChange(shape.value)}
+              className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
+                theme.cellShape === shape.value
+                  ? 'border-pink-500 bg-pink-50'
+                  : 'border-gray-200 bg-white hover:border-pink-300'
+              }`}
+              title={shape.name}
+            >
+              <div className="text-2xl mb-1">{shape.icon}</div>
+              <div className="text-xs text-gray-600">{shape.name}</div>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div>

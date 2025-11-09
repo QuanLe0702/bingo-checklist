@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    dashboardBg: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

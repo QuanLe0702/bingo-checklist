@@ -10,6 +10,8 @@ import PlayMode from './pages/PlayMode';
 import PublicView from './pages/PublicView';
 import Auth from './pages/Auth';
 import Templates from './pages/Templates';
+import UserProfile from './pages/UserProfile';
+import ForgotPassword from './pages/ForgotPassword';
 
 /**
  * Component bảo vệ route (yêu cầu đăng nhập)
@@ -30,6 +32,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Auth mode="login" />} />
         <Route path="/register" element={<Auth mode="register" />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/p/:slug" element={<PublicView />} />
 
@@ -39,6 +42,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <UserProfile />
             </ProtectedRoute>
           }
         />

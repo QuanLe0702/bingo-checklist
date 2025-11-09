@@ -94,6 +94,16 @@ const Auth = ({ mode = 'login' }) => {
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
             )}
+            {authMode === 'login' && (
+              <div className="text-right mt-2">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs text-blue-600 hover:text-blue-700 hover:underline"
+                >
+                  Quên mật khẩu?
+                </Link>
+              </div>
+            )}
           </div>
 
           {error && (
